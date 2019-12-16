@@ -1,0 +1,159 @@
+<?xml version="1.0"?>
+<!-- Note: This XML document is an example Coherence Cache Configuration 
+	deployment descriptor that should be customized (or replaced) for your particular 
+	caching requirements. The cache mappings and schemes declared in this descriptor 
+	are strictly for demonstration purposes and are not required. For detailed 
+	information on each of the elements that can be used in this descriptor please 
+	see the Coherence Cache Configuration deployment descriptor guide included 
+	in the Coherence distribution or the "Cache Configuration Elements" page 
+	on the Coherence Wiki (http://wiki.tangosol.com). -->
+
+<cache-config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://xmlns.oracle.com/coherence/coherence-cache-config"
+	xsi:schemaLocation="http://xmlns.oracle.com/coherence/coherence-cache-config http://xmlns.oracle.com/coherence/coherence-cache-config/1.2/coherence-cache-config.xsd"
+	xmlns:element="class://com.oracle.coherence.common.namespace.preprocessing.XmlPreprocessingNamespaceHandler"
+	element:introduce-cache-config="coherence-scheduler-cache-config.xml"
+	xmlns:scheduler="class://org.prabal.scheduler.namespacehandler.SchedulerNamespaceHandler">
+
+	<scheduler:service-config>
+		<scheduler:schedulerservice>
+			<scheduler:name>DistributedScheduler</scheduler:name>
+			<scheduler:maxthreacount>5</scheduler:maxthreacount>
+			<scheduler:idlewaittimeinmillis>30000
+			</scheduler:idlewaittimeinmillis>
+			<scheduler:dispatcherpolicy>RoundRobin</scheduler:dispatcherpolicy>
+			<!-- <scheduler:singleServerMode/> -->
+		</scheduler:schedulerservice>
+	</scheduler:service-config>
+	<scheduler:jobs>
+		<scheduler:job>
+			<scheduler:jobname>Job-1</scheduler:jobname>
+			<scheduler:jobgroup>DEFAULT</scheduler:jobgroup>
+			<scheduler:description>Simple Job Detail</scheduler:description>
+			<scheduler:jobclass>org.prabal.test.jobs.AnotherDummyJob
+			</scheduler:jobclass>
+			<scheduler:durable>true</scheduler:durable>
+			<scheduler:recoverable>true</scheduler:recoverable>
+			<scheduler:jobdatamap>
+				<scheduler:data key="JobTestKey">JobValue1</scheduler:data>
+				<scheduler:data key="JobTestKey1">JobValue2 </scheduler:data>
+			</scheduler:jobdatamap>
+			<scheduler:triggers>
+				<scheduler:trigger>
+					<scheduler:triggername>{Job-1 - Trigger 1}</scheduler:triggername>
+					<scheduler:triggergroup>DEFAULT</scheduler:triggergroup>
+					<scheduler:description>Simple
+						Trigger Description
+					</scheduler:description>
+					<scheduler:simpletrigger>
+						<scheduler:starttime></scheduler:starttime>
+						<scheduler:endtime></scheduler:endtime>
+						<scheduler:repeatcount>3</scheduler:repeatcount>
+						<scheduler:repeatinterval>40S</scheduler:repeatinterval>
+						<scheduler:misfirepolicy></scheduler:misfirepolicy>
+					</scheduler:simpletrigger>
+					<scheduler:tiggerdatamap>
+						<scheduler:data key="TestKey">Trigger-1-value 1
+						</scheduler:data>
+						<scheduler:data key="TestKey1">Trigger-1-value 2
+						</scheduler:data>
+					</scheduler:tiggerdatamap>
+				</scheduler:trigger>
+				<scheduler:trigger>
+					<scheduler:triggername>{Job-1 - Trigger 2}</scheduler:triggername>
+					<scheduler:triggergroup>DEFAULT</scheduler:triggergroup>
+					<scheduler:description>Simple
+						Trigger Description
+					</scheduler:description>
+					<scheduler:crontrigger>
+						<scheduler:cronexpression>0 0/2 2 * * ?
+						</scheduler:cronexpression>
+						<scheduler:misfirepolicy></scheduler:misfirepolicy>
+					</scheduler:crontrigger>
+					<scheduler:tiggerdatamap>
+						<scheduler:data key="TestKeyCron_1">Cron Trigger - 1
+						</scheduler:data>
+						<scheduler:data key="TestKeyCron_2">Cron Trigger - 2
+						</scheduler:data>
+					</scheduler:tiggerdatamap>
+				</scheduler:trigger>
+			</scheduler:triggers>
+		</scheduler:job>
+		<scheduler:job>
+			<scheduler:jobname>TestJob- TWO</scheduler:jobname>
+			<scheduler:jobgroup>DEFAULT</scheduler:jobgroup>
+			<scheduler:description>Second
+				Job Detail
+			</scheduler:description>
+			<scheduler:jobclass>org.prabal.test.jobs.DummyJob
+			</scheduler:jobclass>
+			<scheduler:durable>true</scheduler:durable>
+			<scheduler:recoverable>true</scheduler:recoverable>
+			<scheduler:jobdatamap>
+				<scheduler:data key="TestKey -2">StartupTestValue-TWO
+				</scheduler:data>
+				<scheduler:data key="TestKey1 -2">StartupTestValue2-TWO
+				</scheduler:data>
+			</scheduler:jobdatamap>
+			<scheduler:triggers>
+				<scheduler:trigger>
+					<scheduler:triggername>TestTrigger- 2</scheduler:triggername>
+					<scheduler:triggergroup>DEFAULT</scheduler:triggergroup>
+					<scheduler:triggertype>SimpleTrigger</scheduler:triggertype>
+					<scheduler:description>Simple
+						Trigger Description
+					</scheduler:description>
+					<scheduler:simpletrigger>
+						<scheduler:starttime></scheduler:starttime>
+						<scheduler:endtime></scheduler:endtime>
+						<scheduler:repeatcount>-1</scheduler:repeatcount>
+						<scheduler:repeatinterval>1M</scheduler:repeatinterval>
+						<scheduler:misfirepolicy></scheduler:misfirepolicy>
+					</scheduler:simpletrigger>
+					<scheduler:tiggerdatamap>
+						<scheduler:data key="TestKey">StartupTriggerTestValue - TWO
+						</scheduler:data>
+						<scheduler:data key="TestKey1">StartupTriggerTestValue- TWO
+						</scheduler:data>
+					</scheduler:tiggerdatamap>
+				</scheduler:trigger>
+			</scheduler:triggers>
+		</scheduler:job>
+	</scheduler:jobs>
+
+	<defaults>
+		<serializer system-property="tangosol.coherence.serializer">pof</serializer>
+	</defaults>
+
+	<caching-scheme-mapping>
+		<cache-mapping>
+			<cache-name>TestCache</cache-name>
+			<scheme-name>TestCacheScheme</scheme-name>
+		</cache-mapping>
+	</caching-scheme-mapping>
+
+	<caching-schemes>
+		<distributed-scheme>
+			<scheme-name>TestCacheScheme</scheme-name>
+			<service-name>TestCacheService</service-name>
+			<backing-map-scheme>
+				<local-scheme />
+			</backing-map-scheme>
+			<autostart>true</autostart>
+		</distributed-scheme>
+
+		<proxy-scheme>
+			<service-name>TestProxyScheme</service-name>
+			<acceptor-config>
+				<tcp-acceptor>
+					<local-address>
+						<address>localhost</address>
+						<port>9999</port>
+					</local-address>
+				</tcp-acceptor>
+			</acceptor-config>
+			<autostart system-property='extend.start'>true</autostart>
+		</proxy-scheme>
+
+	</caching-schemes>
+</cache-config>

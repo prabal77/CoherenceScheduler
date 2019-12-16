@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coherence
+	xmlns="http://xmlns.oracle.com/coherence/coherence-operational-config"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://xmlns.oracle.com/coherence/coherence-operational-config http://xmlns.oracle.com/coherence/coherence-operational-config/1.2/coherence-operational-config.xsd">
+	<cluster-config>
+		<member-identity>
+			<cluster-name>ClusterExtendTest</cluster-name>
+		</member-identity>
+		<multicast-listener>
+			<address>224.2.3.5</address>
+		</multicast-listener>
+		<packet-publisher>
+			<enabled system-property="tangosol.coherence.tcmp.enabled">false
+			</enabled>
+		</packet-publisher>
+	</cluster-config>
+	<management-config>
+		<managed-nodes system-property="tangosol.coherence.management">all</managed-nodes>
+		<allow-remote-management>true</allow-remote-management>
+	</management-config>
+</coherence>

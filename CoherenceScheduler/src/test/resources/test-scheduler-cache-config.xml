@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cache-config xmlns="http://xmlns.oracle.com/coherence/coherence-cache-config"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://xmlns.oracle.com/coherence/coherence-cache-config http://xmlns.oracle.com/coherence/coherence-cache-config/1.2/coherence-cache-config.xsd"
+	xmlns:scheduler="class://org.prabal.scheduler.namespacehandler.SchedulerNamespaceHandler">
+
+	<scheduler:service-config>
+		<scheduler:schedulerservice>
+			<scheduler:name>DistributedScheduler</scheduler:name>
+			<scheduler:minthreadcount>3</scheduler:minthreadcount>
+			<scheduler:maxthreacount>5</scheduler:maxthreacount>
+			<scheduler:keepAliveTime>5000</scheduler:keepAliveTime>
+			<scheduler:idlewaittimeinmillis>30000
+			</scheduler:idlewaittimeinmillis>
+			<scheduler:dispatcherpolicy>RoundRobin</scheduler:dispatcherpolicy>
+		</scheduler:schedulerservice>
+	</scheduler:service-config>
+
+	<defaults>
+		<serializer>pof</serializer>
+	</defaults>
+
+	<caching-scheme-mapping>
+		<cache-mapping>
+			<cache-name>org.prabal.scheduler.JobSubmissionCache</cache-name>
+			<scheme-name>Job-Submission-Scheme</scheme-name>
+		</cache-mapping>
+		<cache-mapping>
+			<cache-name>org.prabal.scheduler.JobStoreCache</cache-name>
+			<scheme-name>Job-Store-Scheme</scheme-name>
+		</cache-mapping>
+		<cache-mapping>
+			<cache-name>org.prabal.scheduler.TriggerStoreCache</cache-name>
+			<scheme-name>Job-Store-Scheme</scheme-name>
+		</cache-mapping>
+		<cache-mapping>
+			<cache-name>org.prabal.scheduler.MembershipStore</cache-name>
+			<scheme-name>Job-Store-Scheme</scheme-name>
+		</cache-mapping>
+	</caching-scheme-mapping>
+	<caching-schemes>
+		<distributed-scheme>
+			<scheme-name>Job-Submission-Scheme</scheme-name>
+			<service-name>Job-Submission-Service</service-name>
+			<backing-map-scheme>
+				<local-scheme />
+			</backing-map-scheme>
+			<autostart>true</autostart>
+			<interceptors>
+				<interceptor>
+					<instance>
+						<class-name>org.prabal.scheduler.listener.SubmissionsListener</class-name>
+					</instance>
+				</interceptor>
+			</interceptors>
+		</distributed-scheme>
+		<distributed-scheme>
+			<scheme-name>Job-Store-Scheme</scheme-name>
+			<service-name>Job-Store-Service</service-name>
+			<backing-map-scheme>
+				<local-scheme />
+			</backing-map-scheme>
+			<autostart>true</autostart>
+		</distributed-scheme>
+
+		<invocation-scheme>
+			<service-name>TestInvocationService</service-name>
+			<autostart>true</autostart>
+		</invocation-scheme>
+
+	</caching-schemes>
+</cache-config>

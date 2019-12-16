@@ -1,0 +1,4 @@
+1. CoherenceScheduler-Node
+Project :	CoherenceScheduler
+Main Class: 	com.tangosol.net.DefaultCacheServer
+VM Argument: 	-Dtangosol.coherence.override=tangosol-coherence-override.xml -Dtangosol.coherence.cacheconfig=coherence-scheduler-cache-config.xml -Dtangosol.pof.config=scheduler-pof-config.xml
